@@ -1,23 +1,29 @@
 #!/usr/bin/env python3
+"""Main script, used to refresh Eole data.
+
+Typical usage example::
+
+    ./refresh.py
+"""
 
 import os
 from glob import glob
 
 import frontmatter
 from core import UpdateMethod
-from github import GitHubProject
+from github import GitHubRepository
 
 
-def do_refresh(update_method, specs):
+def do_refresh(update_method, specs) -> None:
     if update_method == UpdateMethod.MANUAL:
         print("Manual update, nothing to do")
     elif update_method == UpdateMethod.GITHUB:
-        project = GitHubProject(specs)
+        project = GitHubRepository(specs)
         for version in project.releases():
             print(version)
 
 
-def refresh(product_file):
+def refresh(product_file) -> None:
     product_id = os.path.splitext(os.path.basename(product_file))[0]
 
     with open(product_file, "r") as f:
@@ -31,8 +37,6 @@ def refresh(product_file):
         except KeyError:
             print(f"Unknown method '{method_as_str}' for {product_id}")
 
-
-# Main
 
 for file in glob("products/*.md"):
     refresh(file)

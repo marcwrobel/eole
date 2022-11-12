@@ -1,3 +1,5 @@
+"""Everything (types, enum, routines...) related to GitHub."""
+
 import os
 from datetime import datetime
 
@@ -6,6 +8,8 @@ from core import Version
 
 
 class GitHubApiException(Exception):
+    """Used when for a GitHub API returns an error."""
+
     def __init__(self, url, status, message, *args: object) -> None:
         super().__init__(*args)
         self.url = url
@@ -19,25 +23,50 @@ class GitHubApiException(Exception):
         )
 
 
-# Wrapper for GitHub-related tasks.
-class GitHubProject:
-    def __init__(self, spec):
+#
+class GitHubRepository:
+    """Simplify the querying of GitHub repositories."""
+
+    def __init__(self, spec) -> None:
+        """Create a GitHub repository.
+
+        Args:
+            spec (dict): a dictionary containing:
+              - owner (required): GitHub repository's owner
+                                  (e.g. marcwrobel).
+              - repo (required): GitHub repository's name
+                                 (e.g. eole)
+        """
         self.spec = spec
 
     def owner(self) -> str:
+        """Returns this repository owner (e.g. marcwrobel)."""
         return self.spec["owner"]
 
     def repo(self) -> str:
+        """Returns this repository name (e.g. eole)."""
         return self.spec["repo"]
 
     def web_url(self) -> str:
+        """Returns this repository web URL
+        (e.g. https://github.com/marcwrobel/eole)."""
         return f"https://github.com/{self.owner()}/{self.repo()}"
 
     def api_url(self) -> str:
+        """Returns this repository API URL
+        (e.g. https://api.github.com/repos/marcwrobel/eole)."""
         return f"https://api.github.com/repos/{self.owner()}/{self.repo()}"
 
-    # https://docs.github.com/en/rest/releases/releases#list-releases
-    def releases(self) -> []:
+    def releases(self) -> list[Version]:
+        """Returns this repository releases using
+        https://docs.github.com/en/rest/releases/releases#list-releases.
+
+        Draft and pre-release are automatically filtered-out by this
+        function.
+
+        Returns:
+            list: a list of Version instances
+        """
         url = f"{self.api_url()}/releases?per_page=100&page="
 
         headers = {
