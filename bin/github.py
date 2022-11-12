@@ -6,8 +6,6 @@ import requests
 
 from core import Version
 
-DATE_FORMAT: Final[str] = "%Y-%m-%dT%H:%M:%SZ"
-
 
 class GitHubApiException(Exception):
     def __init__(self, url, status, message, *args: object) -> None:
@@ -40,9 +38,13 @@ class GitHubProject:
     def releases(self) -> []:
         url = f"{self.api_url()}/releases?per_page=100&page="
 
-        headers = {"Accept": "application/vnd.github+json", "User-Agent": "Éole"}
+        headers = {
+            "Accept": "application/vnd.github+json",
+            "User-Agent": "Éole",
+        }
         if "GITHUB_API_TOKEN" in os.environ:
-            headers["Authorization"] = f"token {os.environ.get('GITHUB_API_TOKEN')}"
+            token = os.environ.get("GITHUB_API_TOKEN")
+            headers["Authorization"] = f"token {token}"
 
         page = 1
         may_have_more_pages = True
@@ -50,18 +52,20 @@ class GitHubProject:
         while may_have_more_pages:
             response = requests.get(url + str(page), headers=headers)
             if response.status_code != 200:
-                raise GitHubApiException(url, response.status_code, response.text)
+                raise GitHubApiException(
+                    url, response.status_code, response.text
+                )
 
             releases = list(response.json())
             result.extend(
                 list(
                     map(
-                        lambda v: Version(
-                            v["name"],
-                            datetime.strptime(v["published_at"], DATE_FORMAT).date(),
+                        lambda r: Version(
+                            r["name"], self.__to_date(r["published_at"])
                         ),
                         filter(
-                            lambda v: not (v["draft"]) and not (v["prerelease"]),
+                            lambda r: not (r["draft"])
+                            and not (r["prerelease"]),
                             releases,
                         ),
                     )
@@ -72,3 +76,7 @@ class GitHubProject:
             may_have_more_pages = len(releases) > 0
 
         return result
+
+    @staticmethod
+    def __to_date(s):
+        return datetime.strptime(s, "%Y-%m-%dT%H:%M:%SZ").date()
