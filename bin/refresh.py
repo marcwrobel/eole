@@ -1,12 +1,11 @@
 #!/usr/bin/env python3
 
-from glob import glob
 import os
+from glob import glob
 
 import frontmatter
-
-from github import GitHubProject
 from core import UpdateMethod
+from github import GitHubProject
 
 for product_file in glob("products/*.md"):
     product_id = os.path.splitext(os.path.basename(product_file))[0]

@@ -3,7 +3,6 @@ from datetime import datetime
 from typing import Final
 
 import requests
-
 from core import Version
 
 
