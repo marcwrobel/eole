@@ -1,6 +1,7 @@
 from enum import Enum
 
 
+# Available update methods in eole.
 class UpdateMethod(Enum):
     MANUAL = 1
     GITHUB = 2

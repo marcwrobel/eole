@@ -19,6 +19,7 @@ class GitHubApiException(Exception):
         )
 
 
+# Wrapper for GitHub-related tasks.
 class GitHubProject:
     def __init__(self, spec):
         self.spec = spec

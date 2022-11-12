@@ -4,16 +4,13 @@ repos:
     hooks:
       - id: black
         language_version: python3.9
-        args: ["--line-length=79", "--target-version=py39"]
 
   - repo: https://github.com/pycqa/isort
     rev: 5.10.1
     hooks:
       - id: isort
-        args: ["--profile=black", "--filter-files", "--python-version=39"]
 
   - repo: https://github.com/PyCQA/flake8
     rev: 5.0.4
     hooks:
       - id: flake8
-        args: ["--max-doc-length=72", "--max-complexity=5"]

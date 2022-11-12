@@ -32,5 +32,7 @@ def refresh(product_file):
             print(f"Unknown method '{method_as_str}' for {product_id}")
 
 
+# Main
+
 for file in glob("products/*.md"):
     refresh(file)
