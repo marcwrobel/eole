@@ -1,5 +1,4 @@
 """Common types, enum and routines used by eole."""
-
 from enum import Enum
 
 

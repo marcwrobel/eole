@@ -1,5 +1,5 @@
 """Everything (types, enum, routines...) related to GitHub."""
-
+import json
 import os
 from datetime import datetime
 
@@ -107,6 +107,16 @@ class GitHubRepository:
             may_have_more_pages = len(releases) > 0
 
         return result
+
+    def json(self) -> str:
+        """Convert this repository data to JSON."""
+        releases = list(
+            map(
+                lambda v: {"name": v.name, "date": str(v.date)},
+                self.releases(),
+            )
+        )
+        return json.dumps({"releases": releases})
 
     @staticmethod
     def __to_date(s):
