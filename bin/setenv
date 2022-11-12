@@ -1,5 +1,5 @@
 #!/bin/sh
 
 pipenv install
+pipenv run pre-commit install
 pipenv shell
-pre-commit install
