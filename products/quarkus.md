@@ -1,6 +1,15 @@
 ---
-name: quarkus
-method: endoflife_date
+name: Quarkus
+category: framework
+versioning:
+  scheme: semver
+update:
+  versions:
+    method: GITHUB
+    owner: quarkusio
+    repo: quarkus
+    tag: __VERSION__.Final
+  
 ---
 
 > [Quarkus: Supersonic Subatomic Java.](https://quarkus.io/) A Kubernetes Native Java stack tailored for OpenJDK HotSpot
