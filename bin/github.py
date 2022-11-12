@@ -1,6 +1,5 @@
 import os
 from datetime import datetime
-from typing import Final
 
 import requests
 from core import Version
@@ -14,7 +13,10 @@ class GitHubApiException(Exception):
         self.message = message
 
     def __str__(self) -> str:
-        return f"Call to {self.url} returned a {self.status} HTTP code: {self.message}"
+        return (
+            f"Call to {self.url} returned a "
+            f"{self.status} HTTP code: {self.message}"
+        )
 
 
 class GitHubProject:
