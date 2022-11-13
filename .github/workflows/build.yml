@@ -1,0 +1,39 @@
+name: Verify
+
+on:
+  push:
+    branches: ['main']
+    paths: ['.github/**', 'eole/**', 'test/**', 'refresh.py', 'Pipfile', 'Pipfile.lock', 'pyproject.toml', '.flake8']
+  pull_request:
+    branches: ['main']
+    paths: ['.github/**', 'eole/**', 'test/**', 'refresh.py', 'Pipfile', 'Pipfile.lock', 'pyproject.toml', '.flake8']
+  schedule:
+    - cron: '0 0 * * 6' # https://crontab.guru/#0_0_*_*_6
+
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    steps:
+      - name: 'Check out the codebase'
+        uses: 'actions/checkout@v3'
+
+      - name: 'Set up Python 3'
+        uses: 'actions/setup-python@v4'
+        with:
+          python-version: '3.9'
+
+      - name: 'Install dependencies'
+        run: |
+          pip install --upgrade pip
+          pip install pipenv
+          pipenv sync --dev
+
+      - name: 'Run linting'
+        run: |
+          pipenv run black --check .
+          pipenv run isort . --check --diff
+          pipenv run flake8 .
+
+      - name: 'Run tests'
+        run: |
+          pipenv run pytest

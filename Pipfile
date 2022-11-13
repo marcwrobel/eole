@@ -12,6 +12,7 @@ pre-commit = "*"
 black = "*"
 isort = "*"
 flake8 = "*"
+pytest = "*"
 
 [requires]
 python_version = "3.9"
