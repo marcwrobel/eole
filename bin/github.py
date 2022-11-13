@@ -92,7 +92,7 @@ class GitHubRepository:
                 list(
                     map(
                         lambda r: Version(
-                            r["name"], self.__to_date(r["published_at"])
+                            r["tag_name"], self.__to_date(r["published_at"])
                         ),
                         filter(
                             lambda r: not (r["draft"])
