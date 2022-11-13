@@ -5,11 +5,12 @@ Typical usage example::
 
     ./refresh.py
     ./refresh.py quarkus
+    ./refresh.py -h
 """
+import argparse
 import json
 import logging
 import os
-import sys
 from datetime import datetime, timezone
 from glob import glob
 
@@ -71,10 +72,24 @@ def set_up_logging(level):
     )
 
 
-set_up_logging(logging.INFO)
+parser = argparse.ArgumentParser(description="Refresh products data")
+parser.add_argument(
+    "products",
+    metavar="product",
+    type=str,
+    nargs="*",
+    help="an optional list of products to refresh",
+)
+parser.add_argument(
+    "-v", "--verbose", action="store_true", help="show debug logs"
+)
+args = parser.parse_args()
+
+set_up_logging(logging.DEBUG if args.verbose else logging.INFO)
 if __name__ == "__main__":
-    if len(sys.argv) > 1:
-        refresh_product(f"products/{sys.argv[1]}.md")
+    if len(args.products) > 0:
+        for product in args.products:
+            refresh_product(f"products/{product}.md")
     else:
         for product_file in glob("products/*.md"):
             refresh_product(product_file)
