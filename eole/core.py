@@ -1,5 +1,5 @@
 """Common types, enum and routines used by eole."""
-
+import sys
 from enum import Enum
 
 
@@ -10,8 +10,18 @@ class UpdateMethod(Enum):
     """Manual update"""
 
     GITHUB = 2
-    """Update based on GitHub information.
-    """
+    """Update based on GitHub information."""
+
+    UNKNOWN = 999
+    """Manual update"""
+
+    @staticmethod
+    def safe_parse(s):
+        try:
+            return UpdateMethod[s]
+        except KeyError:
+            print(f"Unknown method '{s}'", file=sys.stderr)
+            return UpdateMethod.UNKNOWN
 
 
 class Version:
