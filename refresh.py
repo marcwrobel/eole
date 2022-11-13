@@ -4,9 +4,11 @@
 Typical usage example::
 
     ./refresh.py
+    ./refresh.py quarkus
 """
 
 import os
+import sys
 from glob import glob
 
 import frontmatter
@@ -16,9 +18,7 @@ from eole.github import GitHubRepository
 
 
 def do_refresh(update_method, specs) -> None:
-    if update_method == UpdateMethod.MANUAL:
-        print("Manual update, nothing to do")
-    elif update_method == UpdateMethod.GITHUB:
+    if update_method == UpdateMethod.GITHUB:
         project = GitHubRepository(specs)
         for version in project.releases():
             print(version)
@@ -26,6 +26,7 @@ def do_refresh(update_method, specs) -> None:
 
 def refresh(product_file) -> None:
     product_id = os.path.splitext(os.path.basename(product_file))[0]
+    print(f"Refreshing data for {product_id}")
 
     with open(product_file, "r") as f:
         product_data = frontmatter.load(f)
@@ -39,5 +40,9 @@ def refresh(product_file) -> None:
             print(f"Unknown method '{method_as_str}' for {product_id}")
 
 
-for file in glob("products/*.md"):
-    refresh(file)
+if __name__ == "__main__":
+    if len(sys.argv) > 1:
+        refresh(f"products/{sys.argv[1]}.md")
+    else:
+        for file in glob("products/*.md"):
+            refresh(file)
