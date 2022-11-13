@@ -8,7 +8,6 @@ update:
     method: GITHUB
     owner: quarkusio
     repo: quarkus
-    tag: __VERSION__.Final
   
 ---
 
