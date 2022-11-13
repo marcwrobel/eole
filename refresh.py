@@ -10,8 +10,9 @@ import os
 from glob import glob
 
 import frontmatter
-from core import UpdateMethod
-from github import GitHubRepository
+
+from eole.core import UpdateMethod
+from eole.github import GitHubRepository
 
 
 def do_refresh(update_method, specs) -> None:

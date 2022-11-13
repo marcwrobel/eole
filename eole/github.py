@@ -4,7 +4,8 @@ import os
 from datetime import datetime
 
 import requests
-from core import Version
+
+from eole.core import Version
 
 
 class GitHubApiException(Exception):
