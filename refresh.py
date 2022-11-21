@@ -72,19 +72,22 @@ def set_up_logging(level):
     )
 
 
-parser = argparse.ArgumentParser(description="Refresh products data")
-parser.add_argument(
-    "products",
-    metavar="product",
-    type=str,
-    nargs="*",
-    help="an optional list of products to refresh",
-)
-parser.add_argument(
-    "-v", "--verbose", action="store_true", help="show debug logs"
-)
-args = parser.parse_args()
+def parse_args():
+    parser = argparse.ArgumentParser(description="Refresh products data")
+    parser.add_argument(
+        "products",
+        metavar="product",
+        type=str,
+        nargs="*",
+        help="an optional list of products to refresh",
+    )
+    parser.add_argument(
+        "-v", "--verbose", action="store_true", help="show debug logs"
+    )
+    return parser.parse_args()
 
+
+args = parse_args()
 set_up_logging(logging.DEBUG if args.verbose else logging.INFO)
 if __name__ == "__main__":
     if len(args.products) > 0:
