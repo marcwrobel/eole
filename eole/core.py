@@ -2,6 +2,8 @@
 import sys
 from enum import Enum
 
+import frontmatter
+
 
 class UpdateMethod(Enum):
     """References available update methods in eole."""
@@ -22,6 +24,26 @@ class UpdateMethod(Enum):
         except KeyError:
             print(f"Unknown method '{s}'", file=sys.stderr)
             return UpdateMethod.UNKNOWN
+
+
+class Metadata:
+    """Holds a product metadata."""
+
+    def __init__(self, path) -> None:
+        with open(path, "r") as f:
+            metadata = frontmatter.load(f)
+            update_versions = metadata["update"]["versions"]
+
+            self.name = metadata["name"]
+            self.category = metadata["category"]
+            self.category = metadata["name"]
+            self.update_version_method = UpdateMethod.safe_parse(
+                update_versions["method"]
+            )
+            self.update_version_specs = {
+                "owner": update_versions["owner"],
+                "repo": update_versions["repo"],
+            }
 
 
 class Version:

@@ -1,8 +1,6 @@
 ---
 name: Quarkus
 category: framework
-versioning:
-  scheme: semver
 update:
   versions:
     method: GITHUB

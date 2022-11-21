@@ -14,9 +14,7 @@ import os
 from datetime import datetime, timezone
 from glob import glob
 
-import frontmatter
-
-from eole.core import UpdateMethod
+from eole.core import Metadata, UpdateMethod
 from eole.github import GitHubApiException, GitHubRepository
 
 log = logging.getLogger(__name__)
@@ -26,27 +24,28 @@ def refresh_product(path) -> None:
     identifier = os.path.splitext(os.path.basename(path))[0]
     log.info("Refreshing data for %s", identifier)
 
-    with open(path, "r") as f:
-        metadata = frontmatter.load(f)
-        try:
-            do_refresh_product(identifier, metadata)
-            log.info("Data refreshed for %s", identifier)
-        except GitHubApiException as e:
-            log.warning(
-                "There was an unexpected error while refreshing %s : %s",
-                identifier,
-                e,
-            )
+    metadata = Metadata(path)
+    try:
+        do_refresh_product(identifier, metadata)
+        log.info("Data refreshed for %s", identifier)
+    except GitHubApiException as e:
+        log.warning(
+            "There was an unexpected error while refreshing %s : %s",
+            identifier,
+            e,
+        )
 
 
 def do_refresh_product(identifier, metadata) -> None:
-    specs = metadata["update"]["versions"]
-    method = UpdateMethod.safe_parse(specs["method"])
-    logging.debug("Method for refreshing %s data is %s", identifier, method)
+    logging.debug(
+        "Method for refreshing %s data is %s",
+        identifier,
+        metadata.update_version_method,
+    )
 
     releases = {}
-    if method == UpdateMethod.GITHUB:
-        releases = GitHubRepository(specs).releases()
+    if metadata.update_version_method == UpdateMethod.GITHUB:
+        releases = GitHubRepository(metadata.update_version_specs).releases()
 
     print(
         json.dumps(
