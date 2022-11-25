@@ -29,4 +29,7 @@ def parse_args():
     parser.add_argument(
         "-v", "--verbose", action="store_true", help="show debug logs"
     )
+    parser.add_argument(
+        "-d", "--dir", required=True, help="endoflife.date directory"
+    )
     return parser.parse_args()
