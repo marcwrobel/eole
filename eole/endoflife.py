@@ -1,4 +1,5 @@
 """endoflife.date types."""
+
 import logging
 from enum import Enum
 
